@@ -8,17 +8,18 @@ Download the latest cores from the [nightly release](../../releases/tag/nightly)
 
 | System | Core | Extensions |
 |---|---|---|
-| Nintendo Entertainment System | fceumm | .fds .nes .unf .unif |
+| Nintendo Entertainment System | fceumm | .fds .nes .unif .unf |
 | Super Nintendo | snes9x | .smc .sfc .swc .fig .bs .st |
-| Game Boy / Color / Advance | mgba | .gba .gb .gbc .sgb |
-| Sega Genesis / Mega Drive / MS / GG | genesis_plus_gx | .bin .gen .smd .md .cue .iso .chd .m3u .sms .gg .sg |
+| Game Boy / Color / Advance | mgba | .gb .gbc .gba |
+| Sega Genesis / Mega Drive / MS / GG | genesis_plus_gx | .mdx .md .smd .gen .bin .cue .iso .sms .bms .gg .sg .68k .sgd .chd .m3u |
 | PC Engine / TurboGrafx-16 | mednafen_pce_fast | .pce .cue .ccd .chd .toc .m3u |
-| WonderSwan / WonderSwan Color | mednafen_wswan | .ws .wsc .pc2 |
-| Doom (PrBoom) | prboom | .wad .iwad .pwad .lmp .m3u |
-| PlayStation (fast, software) | pcsx_rearmed | .bin .cue .img .mdf .pbp .toc .cbn .m3u .ccd .chd .iso |
-| PlayStation (accurate, software) | mednafen_psx | .bin .cue .img .mdf .pbp .toc .cbn .m3u .ccd .chd .iso |
+| WonderSwan / WonderSwan Color | mednafen_wswan | .ws .wsc .pc2 .pcv2 |
+| Doom (PrBoom) | prboom | .wad .iwad .pwad |
+| PlayStation (fast, software) | pcsx_rearmed | .bin .cue .img .mdf .pbp .toc .cbn .m3u .ccd .chd .iso .exe |
+| PlayStation (accurate, software) | mednafen_psx | .bin .cue .toc .m3u .ccd .exe .pbp .chd |
+| PlayStation (accurate, OpenGL HW) | mednafen_psx_hw | .bin .cue .toc .m3u .ccd .exe .pbp .chd |
 
-**PlayStation notes:** `pcsx_rearmed` is faster; `mednafen_psx` is more accurate. Both use software rendering — OpenGL GPU plugins are not available in wasm. Hardware-rendered PSX (`mednafen_psx_hw`) requires OpenGL 3.3 / WebGL2; it is not included here because its Emscripten build is untested.
+**PlayStation notes:** `pcsx_rearmed` is fastest; `mednafen_psx` is more accurate (software renderer); `mednafen_psx_hw` is the most accurate and uses OpenGL 3.3 / WebGL2 for hardware-accelerated GPU emulation.
 
 ## Using in a frontend
 
