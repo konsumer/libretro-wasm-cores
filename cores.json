@@ -1,0 +1,72 @@
+{
+  "libretro_exports": [
+    "_retro_init", "_retro_deinit", "_retro_api_version",
+    "_retro_get_system_info", "_retro_get_system_av_info",
+    "_retro_set_environment", "_retro_set_video_refresh",
+    "_retro_set_audio_sample", "_retro_set_audio_sample_batch",
+    "_retro_set_input_poll", "_retro_set_input_state",
+    "_retro_set_controller_port_device",
+    "_retro_reset", "_retro_run",
+    "_retro_serialize_size", "_retro_serialize", "_retro_unserialize",
+    "_retro_cheat_reset", "_retro_cheat_set",
+    "_retro_load_game", "_retro_load_game_special", "_retro_unload_game",
+    "_retro_get_region", "_retro_get_memory_data", "_retro_get_memory_size"
+  ],
+  "cores": [
+    {
+      "name": "fceumm",
+      "repo": "https://github.com/libretro/libretro-fceumm",
+      "makefile": "Makefile.libretro",
+      "subdir": ""
+    },
+    {
+      "name": "snes9x",
+      "repo": "https://github.com/libretro/snes9x",
+      "makefile": "Makefile",
+      "subdir": "libretro"
+    },
+    {
+      "name": "mgba",
+      "repo": "https://github.com/libretro/mgba",
+      "makefile": "Makefile.libretro",
+      "subdir": ""
+    },
+    {
+      "name": "genesis_plus_gx",
+      "repo": "https://github.com/libretro/Genesis-Plus-GX",
+      "makefile": "Makefile.libretro",
+      "subdir": ""
+    },
+    {
+      "name": "prboom",
+      "repo": "https://github.com/libretro/libretro-prboom",
+      "makefile": "Makefile",
+      "subdir": ""
+    },
+    {
+      "name": "mednafen_pce_fast",
+      "repo": "https://github.com/libretro/beetle-pce-fast-libretro",
+      "makefile": "Makefile",
+      "subdir": ""
+    },
+    {
+      "name": "mednafen_wswan",
+      "repo": "https://github.com/libretro/beetle-wswan-libretro",
+      "makefile": "Makefile",
+      "subdir": ""
+    },
+    {
+      "name": "pcsx_rearmed",
+      "repo": "https://github.com/libretro/pcsx_rearmed",
+      "makefile": "Makefile.libretro",
+      "subdir": "",
+      "emcc_cflags": "-sUSE_ZLIB=1"
+    },
+    {
+      "name": "mednafen_psx",
+      "repo": "https://github.com/libretro/beetle-psx-libretro",
+      "makefile": "Makefile",
+      "subdir": ""
+    }
+  ]
+}

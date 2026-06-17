@@ -1,0 +1,85 @@
+name: Build wasm cores
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Rebuild weekly on Sunday midnight to pick up upstream core fixes.
+    - cron: "0 0 * * 0"
+
+jobs:
+  build:
+    name: ${{ matrix.core }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        core:
+          - fceumm
+          - snes9x
+          - mgba
+          - genesis_plus_gx
+          - prboom
+          - mednafen_pce_fast
+          - mednafen_wswan
+          - pcsx_rearmed
+          - mednafen_psx
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Build ${{ matrix.core }}
+        run: ./build.sh ${{ matrix.core }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.core }}
+          path: dist/${{ matrix.core }}_libretro.wasm
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    # Only publish on push to main (not PRs).
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Show built cores
+        run: ls -lh dist/
+
+      - name: Delete existing nightly release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete nightly --yes --cleanup-tag 2>/dev/null || true
+
+      - name: Publish nightly release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create nightly \
+            --title "Nightly wasm cores ($(date -u +%Y-%m-%d))" \
+            --notes "Auto-built wasm SIDE_MODULE cores for use with Emscripten libretro frontends (e.g. raylib-libretro). Each \`.wasm\` is a \`SIDE_MODULE=2\` linked with all libretro API symbols exported." \
+            --prerelease \
+            dist/*.wasm
