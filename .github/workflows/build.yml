@@ -55,6 +55,8 @@ jobs:
     runs-on: ubuntu-latest
     # Only publish on push to main (not PRs).
     if: github.event_name != 'pull_request'
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
