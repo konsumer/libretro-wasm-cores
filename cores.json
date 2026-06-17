@@ -67,6 +67,15 @@
       "repo": "https://github.com/libretro/beetle-psx-libretro",
       "makefile": "Makefile",
       "subdir": ""
+    },
+    {
+      "name": "mednafen_psx_hw",
+      "repo": "https://github.com/libretro/beetle-psx-libretro",
+      "src_name": "mednafen_psx_hw",
+      "makefile": "Makefile",
+      "subdir": "",
+      "make_flags": "HAVE_OPENGL=1 GLES3=1",
+      "emcc_cflags": "-sFULL_ES3=1 -sGL_ENABLE_GET_PROC_ADDRESS=1"
     }
   ]
 }

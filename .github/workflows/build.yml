@@ -27,6 +27,7 @@ jobs:
           - mednafen_wswan
           - pcsx_rearmed
           - mednafen_psx
+          - mednafen_psx_hw
 
     steps:
       - uses: actions/checkout@v4

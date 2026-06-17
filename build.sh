@@ -26,14 +26,17 @@ MANIFEST="$(dirname "$0")/cores.json"
 CORE_JSON="$(jq -r ".cores[] | select(.name == \"$CORE\")" "$MANIFEST")"
 [ -n "$CORE_JSON" ] || { echo "Unknown core: $CORE"; exit 1; }
 
-REPO="$(echo "$CORE_JSON"     | jq -r '.repo')"
-MAKEFILE="$(echo "$CORE_JSON" | jq -r '.makefile')"
-SUBDIR="$(echo "$CORE_JSON"   | jq -r '.subdir // ""')"
+REPO="$(echo "$CORE_JSON"       | jq -r '.repo')"
+MAKEFILE="$(echo "$CORE_JSON"   | jq -r '.makefile')"
+SUBDIR="$(echo "$CORE_JSON"     | jq -r '.subdir // ""')"
 EXTRA_CFLAGS="$(echo "$CORE_JSON" | jq -r '.emcc_cflags // ""')"
+MAKE_FLAGS="$(echo "$CORE_JSON" | jq -r '.make_flags // ""')"
+# src_name: which repo to clone into (for HW variants sharing a repo with SW)
+SRC_NAME="$(echo "$CORE_JSON"   | jq -r '.src_name // .name')"
 
 EXPORTS_CSV="$(jq -r '[.libretro_exports[]] | join(",")' "$MANIFEST")"
 
-CORE_SRC="$SRC_DIR/$CORE"
+CORE_SRC="$SRC_DIR/$SRC_NAME"
 BUILD_DIR="$CORE_SRC${SUBDIR:+/$SUBDIR}"
 BC_FILE="$BUILD_DIR/${CORE}_libretro_emscripten.bc"
 OUT_WASM="$DIST_DIR/${CORE}_libretro.wasm"
@@ -70,7 +73,8 @@ echo "==> Building $CORE (emmake, -j$JOBS)"
 (
     cd "$BUILD_DIR"
     EMCC_CFLAGS="-O3${EXTRA_CFLAGS:+ $EXTRA_CFLAGS}" \
-        emmake make -f "$MAKEFILE" platform=emscripten fpic=-fPIC -j"$JOBS"
+        emmake make -f "$MAKEFILE" platform=emscripten fpic=-fPIC -j"$JOBS" \
+        ${MAKE_FLAGS}
 )
 
 # The make step produces a .bc (bitcode archive); copy it to .a for emcc.
