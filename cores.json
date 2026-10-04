@@ -28,6 +28,7 @@
     {
       "name": "mgba",
       "repo": "https://github.com/libretro/mgba",
+      "ref": "517e518c48e351def04042dc159064dd098830a9",
       "makefile": "Makefile.libretro",
       "subdir": ""
     },

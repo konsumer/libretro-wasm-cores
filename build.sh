@@ -28,6 +28,7 @@ CORE_JSON="$(jq -r ".cores[] | select(.name == \"$CORE\")" "$MANIFEST")"
 
 REPO="$(echo "$CORE_JSON"       | jq -r '.repo')"
 MAKEFILE="$(echo "$CORE_JSON"   | jq -r '.makefile')"
+REF="$(echo "$CORE_JSON"        | jq -r '.ref // ""')"
 SUBDIR="$(echo "$CORE_JSON"     | jq -r '.subdir // ""')"
 EXTRA_CFLAGS="$(echo "$CORE_JSON" | jq -r '.emcc_cflags // ""')"
 MAKE_FLAGS="$(echo "$CORE_JSON" | jq -r '.make_flags // ""')"
@@ -46,7 +47,16 @@ mkdir -p "$SRC_DIR" "$DIST_DIR"
 # ── Clone ────────────────────────────────────────────────────────────────────
 if [ ! -d "$CORE_SRC/.git" ]; then
     echo "==> Cloning $CORE from $REPO"
-    git clone --depth 1 --recurse-submodules --shallow-submodules "$REPO" "$CORE_SRC"
+    if [ -n "$REF" ]; then
+        # pinned commit (e.g. upstream dropped its libretro Makefile)
+        git init -q "$CORE_SRC"
+        git -C "$CORE_SRC" fetch -q --depth 1 "$REPO" "$REF"
+        git -C "$CORE_SRC" checkout -q FETCH_HEAD
+        git -C "$CORE_SRC" remote add origin "$REPO"
+        git -C "$CORE_SRC" submodule update --init --recursive --depth 1
+    else
+        git clone --depth 1 --recurse-submodules --shallow-submodules "$REPO" "$CORE_SRC"
+    fi
 
     # Patch Makefile.common: force STATIC_LINKING gate to always-true so the
     # core includes libretro-common in the side module (no frontend to provide it).
